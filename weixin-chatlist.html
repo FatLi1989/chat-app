@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<ul class="mui-table-view" id="ul_friend_request_list" style="margin-bottom: 10px;">
+
+			</ul>
+		</div>
+
+
+		<script src="js/mui.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init()
+
+			mui.plusReady(function() {
+
+				var thisWebView = plus.webview.currentWebview();
+				//当前窗口动态展示信息 一般刚进入页面时候调用show 方法去渲染页面
+				thisWebView.addEventListener("show", function() {
+					loadingFriendsRequest();
+				})
+
+
+
+
+
+			})
+			//加载好友请求列表
+			function loadingFriendsRequest() {
+				var user = app.getUserGlobalInfo();
+
+				mui.ajax(app.serverUrl + "/u/queryFriendsReq", {
+					data: {
+						userId: user.id
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						if (data.status == 200) {
+							//搜索成功后返回信息
+							var friendReqList = data.data;
+							var requestHtml = "";
+							var ul_friend_request_list = document.getElementById("ul_friend_request_list");
+							if (friendReqList != null && friendReqList.length > 0) {
+								for (var i = 0; i < friendReqList.length; i++) {
+									requestHtml += renderFriendRequests(friendReqList[i]);
+								}
+							}
+							ul_friend_request_list.innerHTML = requestHtml;
+							//为butto绑定事件
+							mui(".btnOper").on("tap", ".passRequest", function() {
+								var friendId = this.getAttribute("friendId");
+								operatorFriendRequest(user.id, friendId, 0);
+							})
+
+							mui(".btnOper").on("tap", ".ignoreRequestoperationFriend", function() {
+								var friendId = this.getAttribute("friendId");
+								operatorFriendRequest(user.id, friendId, 1);
+							})
+
+						}
+					}
+				});
+			}
+
+
+			// 用于拼接单个朋友的请求
+			function renderFriendRequests(friend) {
+				var html = "";
+
+				html = '<li class="btnOper mui-table-view-cell mui-media">' +
+					'<a href="javascript:;">' +
+					'<img class="mui-media-object mui-pull-left" src="' + app.imageUrl + friend.sendFaceImage + '">' +
+					'<span id="span_nickname" class="mui-pull-right">' +
+					'<button friendId="' + friend.sendUserId +
+					'" type="button" class="ignoreRequest mui-btn mui-btn-grey" style="padding: 4px 10px;margin-right:5px;">忽略</button>' +
+					'<button friendId="' + friend.sendUserId +
+					'" type="button" class="passRequest mui-btn mui-btn-danger" style="padding: 4px 10px;">通过</button>' +
+					'</span>' +
+					'<div class="mui-media-body">' +
+					'<label>' + friend.sendNickName + '</label>' +
+					'<p class="mui-ellipsis">请求添加你为朋友</p>' +
+					'</div>' +
+					'</a>' +
+					'</li>';
+
+				return html;
+			}
+
+
+			//操作好友请求
+			function operatorFriendRequest(userId, friendId, operType) {
+					//调用后端方法
+					mui.ajax(app.serverUrl + "/u/operateFriendReq", {
+					data: {
+						myUserId: userId,
+						myFriendUserId: friendId,
+						operateType: operType
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						if (data.status == 200) {
+							
+						}
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

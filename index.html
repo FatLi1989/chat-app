@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+	<link href="css/header.css" rel="stylesheet" />
+	<link href="fontico/iconfont.css" rel="stylesheet"/>
+    <script type="text/javascript" charset="utf-8">
+      	 mui.init(); //mui初始化
+		 mui.plusReady(function(){//移动设备就绪完成 进行操作
+			plus.navigator.setStatusBarBackground('#C9394A');
+			plus.navigator.setStatusBarStyle('light');
+		 })
+    </script>
+</head>
+<body>
+	
+	<header class="mui-bar mui-bar-nav title">
+		<h1 class="mui-title title-color"><b>微信</b></h1>
+	</header>
+	
+	<nav class="mui-bar mui-bar-tab">
+		<a class="mui-tab-item mui-active" tabindex="0">
+			<span class="mui-icon icon-weixin iconfont"></span>
+			<span class="mui-tab-label">微信</span>
+		</a>
+		<a class="mui-tab-item" tabindex="1">
+			<span class="mui-icon mui-icon-phone" ></span>
+			<span class="mui-tab-label">通讯录</span>
+		</a>
+		<a class="mui-tab-item" tabindex="2">
+			<span class="mui-icon mui-icon-paperplane" ></span>
+			<span class="mui-tab-label">发现</span>
+		</a>
+		<a class="mui-tab-item" tabindex="3">
+			<span class="mui-icon mui-icon-person" ></span>
+			<span class="mui-tab-label">我</span>
+		</a>
+	</nav>
+	
+	<script type="text/javascript">
+		var weixinArray = [
+			{
+				pageId:"weixin-chatlist.html",
+				pageUrl:"weixin-chatlist.html"
+			},
+			{
+				pageId:"weixin-concent.html",
+				pageUrl:"weixin-concent.html"
+			},
+			{
+				pageId:"weixin-discover.html",
+				pageUrl:"weixin-discover.html"
+			},
+			{
+				pageId:"weixin-me.html",
+				pageUrl:"weixin-me.html"
+			}
+		];
+		
+		var weixinStyle = {
+			top: "44px",
+			bottom: "50px" 
+		}
+		
+		mui.plusReady(function () {
+			//获取当前的webview对象
+		    var indexWebview = plus.webview.currentWebview();
+			
+			//向当前的主页webview追加子页的4张webview对象
+			for (var i = 0; i< weixinArray.length; i++) {
+				//创建4个窗口
+				var weixinPage = plus.webview.create(weixinArray[i].pageUrl, weixinArray[i].pageId,weixinStyle);
+				//隐藏窗口
+				weixinPage.hide();
+				//追加每一个子页面到当前主页面
+				indexWebview.append(weixinPage);
+			};
+			
+			plus.webview.show(weixinArray[0].pageId);
+			
+			mui(".mui-bar-tab").on("tap", "a", function(){
+				var tabIndex = this.getAttribute("tabindex");
+				//显示点击的tab选项所对应的页面
+				plus.webview.show(weixinArray[tabIndex].pageId, "fade-in", 200);
+				
+				//隐藏其他的不需要的页面
+				for (var i = 0; i< weixinArray.length; i++) {
+					if (i != tabIndex) {
+						plus.webview.hide(weixinArray[i].pageId, "fade-out", 200)
+					}
+					
+				}
+			})
+		})
+	</script>
+</body>
+</html>
