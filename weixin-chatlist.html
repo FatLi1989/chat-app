@@ -118,7 +118,8 @@
 					},
 					success: function(data) {
 						if (data.status == 200) {
-							
+							// 重新加载好友请求记录
+						loadingFriendsRequest();
 						}
 					}
 				});

@@ -1,7 +1,7 @@
 window.app = {
 	
-	serverUrl: 'http://172.16.1.110:8888',
-	
+	serverUrl: 'http://192.168.1.9:8888',
+	 
 	
 	
 	imageUrl: 'http://106.12.137.47:8888/group1/',
