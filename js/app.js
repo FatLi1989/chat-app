@@ -1,6 +1,6 @@
 window.app = {
 	
-	serverUrl: 'http://192.168.1.9:8888',
+	serverUrl: 'http://172.16.1.110:8888',
 	 
 	
 	
