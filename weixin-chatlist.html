@@ -28,11 +28,11 @@
 				thisWebView.addEventListener("show", function() {
 					loadingFriendsRequest();
 				})
-
-
-
-
-
+				
+				//刷新好友请求列表
+				window.addEventListener("refresh", function(){
+					loadingFriendsRequest();
+				})
 			})
 			//加载好友请求列表
 			function loadingFriendsRequest() {
@@ -103,8 +103,8 @@
 
 			//操作好友请求
 			function operatorFriendRequest(userId, friendId, operType) {
-					//调用后端方法
-					mui.ajax(app.serverUrl + "/u/operateFriendReq", {
+				//调用后端方法
+				mui.ajax(app.serverUrl + "/u/operateFriendReq", {
 					data: {
 						myUserId: userId,
 						myFriendUserId: friendId,
@@ -119,7 +119,7 @@
 					success: function(data) {
 						if (data.status == 200) {
 							// 重新加载好友请求记录
-						loadingFriendsRequest();
+							loadingFriendsRequest();
 						}
 					}
 				});

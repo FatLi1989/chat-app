@@ -52,7 +52,7 @@
 			
 				function onmarked( type, result ) {
 				if (type === 0) {
-					var content = result.split("muxin_qrcode:");
+					var content = result.split("chat_qrcode:");
 					if (content.length != 2) {
 						mui.alert(result)
 					} else {
@@ -61,28 +61,30 @@
 						var user = app.getUserGlobalInfo();
 						
 						plus.nativeUI.showWaiting("请稍后...");
-						mui.ajax(app.serverUrl + "/u/search?myUserId=" + user.id +
-										"&friendUsername=" + friendUsername, {
-							data:{},
-							dataType:'json',//服务器返回json格式数据
-							type:'post',//HTTP请求类型
-							timeout:10000,//超时时间设置为10秒；
-							headers:{'Content-Type':'application/json'},	              
-							success:function(data){
-								//服务器返回响应
+						mui.ajax(app.serverUrl + "/u/search/friend", {
+							data: {
+								userId: user.id,
+								userName: friendUsername
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							success: function(data) {
 								plus.nativeUI.closeWaiting();
-								
+						
 								if (data.status == 200) {
-									
+									//搜索成功后返回信息
 									mui.openWindow({
-										url: "searchFriendsResult.html",
 										id: "searchFriendsResult.html",
-										styles: {},
+										url: "searchFriendsResult.html",
+										style: {},
 										extras: {
 											willBeFriend: data.data
 										}
-									});
-									
+									})
 								} else {
 									app.showToast(data.msg, "error");
 								}
@@ -90,7 +92,7 @@
 						});
 					}
 				}
-				scan.start();
+				setTimeout("scan.start()", "2000");
 			}
 		</script>
 	</body>
