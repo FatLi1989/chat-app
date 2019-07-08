@@ -28,9 +28,9 @@
 				thisWebView.addEventListener("show", function() {
 					loadingFriendsRequest();
 				})
-				
+
 				//刷新好友请求列表
-				window.addEventListener("refresh", function(){
+				window.addEventListener("refresh", function() {
 					loadingFriendsRequest();
 				})
 			})
@@ -118,6 +118,9 @@
 					},
 					success: function(data) {
 						if (data.status == 200) {
+							//刷新好友列表
+							var myFriendList = data.data;
+							app.setContactList(myFriendList);
 							// 重新加载好友请求记录
 							loadingFriendsRequest();
 						}
